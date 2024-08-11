@@ -1,0 +1,10 @@
+{
+  "name": "com.meeshroom.tweenables",
+  "version": "0.1.0",
+  "description": "A utility package for tweening.",
+  "displayName": "Tweenables",
+  "author": {
+    "name": "Christian Schefe",
+    "email": "meeshroomchai@gmail.com"
+  }
+}
