@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tweenables
+namespace Tweenables.Core
 {
     [Serializable]
     public struct TweenParams

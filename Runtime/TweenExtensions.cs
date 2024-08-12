@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Tweenables.Core;
+using Tweenables.Utils;
 
 namespace Tweenables
 {
