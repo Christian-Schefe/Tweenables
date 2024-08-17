@@ -122,7 +122,7 @@ namespace Tweenables
 
         public static Tween TweenDelayedAction(this MonoBehaviour owner, Action action, float delay)
         {
-            return new Tween(owner).Delay(delay).OnFinally(action);
+            return new Tween(owner).Duration(0).Delay(delay).OnStart(action);
         }
     }
 }
