@@ -120,6 +120,11 @@ namespace Tweenables
             return new Tween(owner);
         }
 
+        public static Tween<T> TweenAny<T>(this MonoBehaviour owner)
+        {
+            return new Tween<T>(owner);
+        }
+
         public static Tween TweenDelayedAction(this MonoBehaviour owner, Action action, float delay)
         {
             return new Tween(owner).Duration(0).Delay(delay).OnStart(action);

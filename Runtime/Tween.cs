@@ -71,13 +71,15 @@ namespace Tweenables.Core
         public Action onComplete;
         public Action onCancel;
         public Action onFinally;
+        public Action onAfterComplete;
 
         public static TweenCallbacks Default => new()
         {
             onStart = null,
             onComplete = null,
             onCancel = null,
-            onFinally = null
+            onFinally = null,
+            onAfterComplete = null
         };
     }
 
@@ -109,6 +111,7 @@ namespace Tweenables.Core
 
         public Tween<T> By(T by)
         {
+            if (from == null) throw new InvalidOperationException("Tween 'From' value must be set before using 'By'");
             to = (Tweenable<T>)from.Offset(by);
             return this;
         }
@@ -118,6 +121,13 @@ namespace Tweenables.Core
             if (replace) valSetter = setter;
             else valSetter += setter;
             return this;
+        }
+
+        protected override void AssertRunnable()
+        {
+            base.AssertRunnable();
+            UnityEngine.Assertions.Assert.IsTrue(from != null, "Tween 'From' value must be set");
+            UnityEngine.Assertions.Assert.IsTrue(to != null, "Tween 'To' value must be set");
         }
 
         public new Tween<T> Owner(MonoBehaviour owner) => (Tween<T>)base.Owner(owner);
@@ -264,27 +274,32 @@ namespace Tweenables.Core
             return this;
         }
 
-        private bool Runnable => owner != null;
-        private void AssertRunnable()
+        internal Tween OnAfterComplete(Action action)
         {
-            UnityEngine.Assertions.Assert.IsTrue(Runnable, "Can only run Tween if field 'Owner' is set");
+            callbacks.onAfterComplete = action;
+            return this;
         }
 
-        public TweenRoutine RunNew()
+        protected virtual void AssertRunnable()
+        {
+            UnityEngine.Assertions.Assert.IsTrue(owner != null, "Can only run Tween if field 'Owner' is set");
+        }
+
+        public TweenRunner RunNew()
         {
             AssertRunnable();
-            TweenRoutine runner = new();
+            TweenRunner runner = new();
             return runner.RunQueued(this);
         }
 
-        public TweenRoutine RunImmediate(ref TweenRoutine runner)
+        public TweenRunner RunImmediate(ref TweenRunner runner)
         {
             AssertRunnable();
             runner ??= new();
             return runner.RunImmediate(this);
         }
 
-        public TweenRoutine RunQueued(ref TweenRoutine runner)
+        public TweenRunner RunQueued(ref TweenRunner runner)
         {
             AssertRunnable();
             runner ??= new();
@@ -336,6 +351,7 @@ namespace Tweenables.Core
             callbacks.onComplete?.Invoke();
             callbacks.onFinally?.Invoke();
             Terminated = true;
+            callbacks.onAfterComplete?.Invoke();
         }
 
         public void OnCancel()
@@ -349,7 +365,7 @@ namespace Tweenables.Core
         }
     }
 
-    public class TweenRoutine
+    public class TweenRunner
     {
         private Coroutine coroutine;
         private Tween tween;
@@ -360,7 +376,7 @@ namespace Tweenables.Core
 
         private void StartTween(Tween tween)
         {
-            tween.OnComplete(OnDrawNextTween);
+            tween.OnAfterComplete(OnDrawNextTween);
             coroutine = tween.owner.StartCoroutine(tween.Coroutine());
             this.tween = tween;
             Running = true;
@@ -377,13 +393,13 @@ namespace Tweenables.Core
             }
         }
 
-        public TweenRoutine Cancel()
+        public TweenRunner Cancel()
         {
             chain.Clear();
             return Skip();
         }
 
-        public TweenRoutine Skip()
+        public TweenRunner Skip()
         {
             if (Running)
             {
@@ -395,14 +411,14 @@ namespace Tweenables.Core
             return this;
         }
 
-        public TweenRoutine RunImmediate(Tween newTween)
+        public TweenRunner RunImmediate(Tween newTween)
         {
             Cancel();
             StartTween(newTween);
             return this;
         }
 
-        public TweenRoutine RunQueued(Tween nextTween)
+        public TweenRunner RunQueued(Tween nextTween)
         {
             if (Running) chain.Enqueue(nextTween);
             else StartTween(nextTween);
