@@ -1,88 +1,160 @@
 using System;
-using UnityEngine;
 using Tweenables.Core;
 using Tweenables.Utils;
+using UnityEngine;
 
 namespace Tweenables
 {
     public static class TweenExtensions
     {
+        public static Tween<RawTransform> TweenTransform(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<RawTransform>(owner).Use(t => t.Transfer(target, false)).From(new(target, false));
+        }
+
         public static Tween<RawTransform> TweenTransform(this MonoBehaviour owner)
         {
-            return new Tween<RawTransform>(owner).Use(t => t.Transfer(owner.transform, false)).From(new(owner.transform, false));
+            return TweenTransform(owner, owner.transform);
+        }
+
+        public static Tween<RawTransform> TweenLocalTransform(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<RawTransform>(owner).Use(t => t.Transfer(target, true)).From(new(target, true));
         }
 
         public static Tween<RawTransform> TweenLocalTransform(this MonoBehaviour owner)
         {
-            return new Tween<RawTransform>(owner).Use(t => t.Transfer(owner.transform, true)).From(new(owner.transform, true));
+            return TweenLocalTransform(owner, owner.transform);
+        }
+
+        public static Tween<Vector2> TweenAnchoredPosition(this MonoBehaviour owner, RectTransform target)
+        {
+            return new Tween<Vector2>(owner).Use(p => target.anchoredPosition = p).From(target.anchoredPosition);
         }
 
         public static Tween<Vector2> TweenAnchoredPosition(this MonoBehaviour owner)
         {
-            var rectTransform = owner.GetComponent<RectTransform>();
-            return new Tween<Vector2>(owner).Use(p => rectTransform.anchoredPosition = p).From(rectTransform.anchoredPosition);
+            return TweenAnchoredPosition(owner, owner.GetComponent<RectTransform>());
+        }
+
+        public static Tween<float> TweenAnchoredPositionX(this MonoBehaviour owner, RectTransform target)
+        {
+            return new Tween<float>(owner).Use(x => target.SetAnchoredPosX(x)).From(target.anchoredPosition.x);
         }
 
         public static Tween<float> TweenAnchoredPositionX(this MonoBehaviour owner)
         {
-            var rectTransform = owner.GetComponent<RectTransform>();
-            return new Tween<float>(owner).Use(p => rectTransform.SetAnchoredPosX(p)).From(rectTransform.anchoredPosition.x);
+            return TweenAnchoredPositionX(owner, owner.GetComponent<RectTransform>());
+        }
+
+        public static Tween<float> TweenAnchoredPositionY(this MonoBehaviour owner, RectTransform target)
+        {
+            return new Tween<float>(owner).Use(y => target.SetAnchoredPosY(y)).From(target.anchoredPosition.y);
         }
 
         public static Tween<float> TweenAnchoredPositionY(this MonoBehaviour owner)
         {
-            var rectTransform = owner.GetComponent<RectTransform>();
-            return new Tween<float>(owner).Use(p => rectTransform.SetAnchoredPosY(p)).From(rectTransform.anchoredPosition.y);
+            return TweenAnchoredPositionY(owner, owner.GetComponent<RectTransform>());
+        }
+
+        public static Tween<Vector3> TweenPosition(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<Vector3>(owner).Use(p => target.position = p).From(target.position);
         }
 
         public static Tween<Vector3> TweenPosition(this MonoBehaviour owner)
         {
-            return new Tween<Vector3>(owner).Use(p => owner.transform.position = p).From(owner.transform.position);
+            return TweenPosition(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenPositionX(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(x => target.SetPosX(x)).From(target.position.x);
         }
 
         public static Tween<float> TweenPositionX(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(x => owner.transform.SetPosX(x)).From(owner.transform.position.x);
+            return TweenPositionX(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenPositionY(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(y => target.SetPosY(y)).From(target.position.y);
         }
 
         public static Tween<float> TweenPositionY(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(y => owner.transform.SetPosY(y)).From(owner.transform.position.y);
+            return TweenPositionY(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenPositionZ(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(z => target.SetPosZ(z)).From(target.position.z);
         }
 
         public static Tween<float> TweenPositionZ(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(z => owner.transform.SetPosZ(z)).From(owner.transform.position.z);
+            return TweenPositionZ(owner, owner.transform);
+        }
+
+        public static Tween<Vector3> TweenLocalPosition(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<Vector3>(owner).Use(p => target.localPosition = p).From(target.localPosition);
         }
 
         public static Tween<Vector3> TweenLocalPosition(this MonoBehaviour owner)
         {
-            return new Tween<Vector3>(owner).Use(p => owner.transform.localPosition = p).From(owner.transform.localPosition);
+            return TweenLocalPosition(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenLocalPositionX(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(x => target.SetLocalPosX(x)).From(target.localPosition.x);
         }
 
         public static Tween<float> TweenLocalPositionX(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(x => owner.transform.SetLocalPosX(x)).From(owner.transform.localPosition.x);
+            return TweenLocalPositionX(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenLocalPositionY(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(y => target.SetLocalPosY(y)).From(target.localPosition.y);
         }
 
         public static Tween<float> TweenLocalPositionY(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(y => owner.transform.SetLocalPosY(y)).From(owner.transform.localPosition.y);
+            return TweenLocalPositionY(owner, owner.transform);
+        }
+
+        public static Tween<float> TweenLocalPositionZ(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(z => target.SetLocalPosZ(z)).From(target.localPosition.z);
         }
 
         public static Tween<float> TweenLocalPositionZ(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(z => owner.transform.SetLocalPosZ(z)).From(owner.transform.localPosition.z);
+            return TweenLocalPositionZ(owner, owner.transform);
+        }
+
+        public static Tween<Quaternion> TweenRotation(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<Quaternion>(owner).Use(r => target.rotation = r).From(target.rotation);
         }
 
         public static Tween<Quaternion> TweenRotation(this MonoBehaviour owner)
         {
-            return new Tween<Quaternion>(owner).Use(r => owner.transform.rotation = r).From(owner.transform.rotation);
+            return TweenRotation(owner, owner.transform);
+        }
+
+        public static Tween<Quaternion> TweenLocalRotation(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<Quaternion>(owner).Use(r => target.localRotation = r).From(target.localRotation);
         }
 
         public static Tween<Quaternion> TweenLocalRotation(this MonoBehaviour owner)
         {
-            return new Tween<Quaternion>(owner).Use(r => owner.transform.localRotation = r).From(owner.transform.localRotation);
+            return TweenLocalRotation(owner, owner.transform);
         }
 
         public static Tween<Vector3> TweenScale(this MonoBehaviour owner, Transform target)
@@ -95,9 +167,14 @@ namespace Tweenables
             return TweenScale(owner, owner.transform);
         }
 
+        public static Tween<float> TweenScaleX(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(x => target.SetScaleX(x)).From(target.localScale.x);
+        }
+
         public static Tween<float> TweenScaleX(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(x => owner.transform.SetScaleX(x)).From(owner.transform.localScale.x);
+            return TweenScaleX(owner, owner.transform);
         }
 
         public static Tween<float> TweenScaleY(this MonoBehaviour owner, Transform target)
@@ -110,9 +187,14 @@ namespace Tweenables
             return TweenScaleY(owner, owner.transform);
         }
 
+        public static Tween<float> TweenScaleZ(this MonoBehaviour owner, Transform target)
+        {
+            return new Tween<float>(owner).Use(z => target.SetScaleZ(z)).From(target.localScale.z);
+        }
+
         public static Tween<float> TweenScaleZ(this MonoBehaviour owner)
         {
-            return new Tween<float>(owner).Use(z => owner.transform.SetScaleZ(z)).From(owner.transform.localScale.z);
+            return TweenScaleZ(owner, owner.transform);
         }
 
         public static Tween TweenAny(this MonoBehaviour owner)
@@ -128,6 +210,11 @@ namespace Tweenables
         public static Tween TweenDelayedAction(this MonoBehaviour owner, Action action, float delay)
         {
             return new Tween(owner).Duration(0).Delay(delay).OnStart(action);
+        }
+
+        public static TweenRunner RunDelayed(this MonoBehaviour owner, Action action, float delay)
+        {
+            return new Tween(owner).Duration(0).Delay(delay).OnStart(action).RunNew();
         }
     }
 }
